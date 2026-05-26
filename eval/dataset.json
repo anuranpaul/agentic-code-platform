@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Where is the payment retry logic implemented and what is the retry strategy?",
+    "ground_truth": "The payment retry logic is in the PaymentService class with a max_retries parameter defaulting to 3, using a for loop to attempt the payment up to the maximum number of retries."
+  },
+  {
+    "question": "What functions are responsible for chunking source code files?",
+    "ground_truth": "The chunk_file method in ASTChunker class handles file chunking. It uses tree-sitter to parse the AST and _walk_node to recursively extract function and class boundaries."
+  },
+  {
+    "question": "How does the ingestion pipeline handle large files?",
+    "ground_truth": "Files larger than MAX_FILE_SIZE_BYTES (100KB) are skipped in the cloner. Chunks exceeding MAX_CHUNK_TOKENS (1500 tokens) are recursively split by descending into child AST nodes."
+  },
+  {
+    "question": "What is the fallback behavior when tree-sitter cannot parse a file?",
+    "ground_truth": "The _fallback_chunk method splits the file into 80-line windows with a 60-line stride. Small files are returned as a single module-type chunk."
+  },
+  {
+    "question": "How are vectors namespaced per repository to support multi-repo queries?",
+    "ground_truth": "Each vector has a repo_id metadata field. Queries filter using the Upstash Vector metadata filter: repo_id = '{repo_id}'. The delete_repo method uses the same filter to remove all vectors for a repo."
+  },
+  {
+    "question": "What LLM providers are supported and how is the provider selected?",
+    "ground_truth": "Groq (default, Llama 3.3 70B) and OpenAI are supported. The provider is configured via LLM_PROVIDER env var or overridden per-request via the model field in QueryRequest."
+  },
+  {
+    "question": "How does QStash deliver ingestion jobs and what happens on failure?",
+    "ground_truth": "QStash posts to POST /webhooks/qstash with the repo payload. The endpoint verifies the Upstash signature, runs ingestion, and returns 200. QStash retries automatically on non-2xx responses up to 3 times."
+  },
+  {
+    "question": "Which directories and file types are excluded during repository walking?",
+    "ground_truth": "Directories like node_modules, .git, vendor, dist, target, and .venv are skipped. Only files with supported extensions (py, ts, tsx, js, go, rs, java, cpp, c, rb) are processed. Files over 100KB are also skipped."
+  },
+  {
+    "question": "What context information is included alongside each chunk during embedding?",
+    "ground_truth": "Each chunk includes a context_header containing the file's import/require statements and module docstring. The embedding_text() method prepends this header before the node type label and content."
+  },
+  {
+    "question": "How does the retriever handle duplicate or overlapping chunks in search results?",
+    "ground_truth": "The _deduplicate_chunks function removes results whose file_path and line ranges overlap with already-selected chunks. It fetches top_k*2 results then deduplicates before trimming to top_k."
+  }
+]
