@@ -64,7 +64,7 @@ flowchart TD
 
 ---
 
-## 🛠️ Recruiter Highlights & Engineering Decisions
+## 🛠️ Highlights & Engineering Decisions
 
 When reviewing this codebase, hiring managers and senior engineers should note the following production-minded patterns:
 
